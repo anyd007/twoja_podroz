@@ -1,0 +1,13 @@
+.linkSection{
+    text-align: center;
+}
+.links{
+    font-family: "Roboto", sans-serif;
+    margin: 20px;
+    text-decoration: none;
+    font-size: 30px;
+    transition: .5s;
+}
+.links:hover{
+    color: tomato;
+}
