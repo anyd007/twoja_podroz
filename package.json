@@ -1,0 +1,22 @@
+{
+  "name": "twoja_podroz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd server && npm install && npm start",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anyd007/twoja_podroz.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anyd007/twoja_podroz/issues"
+  },
+  "homepage": "https://github.com/anyd007/twoja_podroz#readme"
+}
