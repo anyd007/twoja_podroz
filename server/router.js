@@ -11,8 +11,12 @@ router.post("/trip_history", async (req,res)=>{
         trip_start: req.body.trip_start,
         trip_end: req.body.trip_end,
         duration: req.body.duration,
-        date: req.body.date
+        date: req.body.date,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude
     })
+    await post.save()
+    res.send.post
 })
 
 module.exports = router

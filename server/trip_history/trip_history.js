@@ -4,7 +4,9 @@ const schema = mongoose.Schema({
     trip_start: String,
     trip_end: String,
     duration: Number,
-    date: String
+    date: String,
+    latitude: Number,
+    longitude: Number
 })
 
 module.exports = mongoose.model("trip_history", schema)
