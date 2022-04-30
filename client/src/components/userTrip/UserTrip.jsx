@@ -49,6 +49,11 @@ const UserTrip = () =>{
         setLoading(false)
     })
     }
+
+    //funkcja przekazująca dane na backend
+const sendTripDataToBackEnd = (start_addresss, start_locationId) =>{
+
+}
     //funkcja onclick sprawdzająca inputy i wysyłająca funkcję do wysłania na serwer
     const handleSendBtn = () =>{
         api()
