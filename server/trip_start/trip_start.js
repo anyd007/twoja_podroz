@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const schema = mongoose.Schema({
-    start_addresss: Object,
+    start_address: Object,
     start_locationId: Object
 })
 

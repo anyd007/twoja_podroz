@@ -8,7 +8,7 @@ router.get("/trip_start", async (req,res)=>{
 })
 router.post("/trip_start", async (req,res)=>{
     const post = new tripStart({
-        start_addresss: req.body.start_addresss,
+        start_address: req.body.start_address,
         start_locationId: req.body.start_locationId
     })
     await post.save()
