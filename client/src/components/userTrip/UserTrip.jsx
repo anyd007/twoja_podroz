@@ -1,8 +1,11 @@
 import React from "react";
 import axios from "axios";
+import ReactLoading from 'react-loading';
+import { useNavigate } from 'react-router-dom';
+import "./userTrip.css"
 
 
-const UserTrip = () =>{
+const UserTrip = (props) =>{
     const [loading, setLoading] = React.useState(false)
     const [error, setError] = React.useState(null)
     //przekazywanie danych z inputów
@@ -18,12 +21,17 @@ const UserTrip = () =>{
         }))
     }
      //funkcja onclick sprawdzająca inputy i wysyłająca funkcję do wysłania na serwer
+     const history = useNavigate();
      const handleSendBtn = () =>{
         setLoading(true)
         api()
         endapi()
-        setError(null)
         sendTripDataToBackEnd(data.start_address, data.start_locationId, data.end_address, data.end_locationId)
+        if(loading === false || error===false){
+            history('/mapsData')
+        }else{
+            console.log("dupa");
+        }
        }
         
     
@@ -111,7 +119,10 @@ const sendTripDataToBackEnd = (start_address, start_locationId, end_address, end
    
 return(
     <div className="tripAddContainer">
-        {loading && <div><h4>SPRAWDZAM...</h4></div>}
+    {loading && <div>
+         <ReactLoading type={"bars"} color={"tomato"} height={467} width={175} className="loading"/>
+     <h4 className="loading" style={{color: "black", fontSize: "25px"}}>SPRAWDZAM</h4>
+     </div>}
         {error && <div><h4>{error}</h4></div>}
     <div className="background"></div>
     <section className="titleContener">

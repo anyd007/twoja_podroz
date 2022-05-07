@@ -3,6 +3,7 @@ import {MapContainer, Marker, Popup, TileLayer, useMap} from "react-leaflet"
 import { Icon, marker } from "leaflet";
 import axios from "axios";
 import uniqid from "uniqid"
+import ReactLoading from 'react-loading';
 import "./mapsData.css"
 
 const MapsData = props =>{
@@ -57,7 +58,10 @@ const [getLabel, setGetLabel] = React.useState(null)
 
     return(
         <>
-            {loading && <div><h4>WCZYTUJĘ</h4></div>}
+            {loading && <div>
+         <ReactLoading type={"bars"} color={"tomato"} height={467} width={175} className="loading"/>
+     <h4 className="loading" style={{color: "black", fontSize: "25px"}}>SPRAWDZAM</h4>
+     </div>}
           { trip.markers && trip.markers.slice(0,1).map(el=>(<MapContainer center={[el.lat, el.lng]} zoom={7} scrollWheelZoom={false}>
             <TileLayer
              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
