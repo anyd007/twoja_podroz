@@ -1,10 +1,12 @@
 import React from "react";
 import {MapContainer, Marker, Popup, TileLayer, useMap} from "react-leaflet"
-import { Icon } from "leaflet";
+import { Icon, marker } from "leaflet";
 import axios from "axios";
+import uniqid from "uniqid"
 import "./mapsData.css"
 
 const MapsData = props =>{
+const [loading, setLoading] = React.useState(true)
 const startTripIcon = new Icon({
     iconUrl: 'http://leafletjs.com/examples/custom-icons/leaf-green.png',
     shadowUrl: 'http://leafletjs.com/examples/custom-icons/leaf-shadow.png',
@@ -14,54 +16,59 @@ const startTripIcon = new Icon({
     shadowAnchor: [4, 62],
     popupAnchor:  [-3, -76]
 })
-const[startTrip, setStartTrip] = React.useState({
-    startTripName:'',
-    startTripLatitude:'',
-    startTripLongitude:''
-})
-
-const handleStartCoordinate = () =>{
-    axios
+const[trip, setTrip] = React.useState([])
+React.useEffect(()=>{
+ axios
     .get("api/trip_start")
     .then(res =>{
-        console.log(res.data);
     const start_location = res.data[res.data.length - 1].start_address.label
     const start_latitude = res.data[res.data.length - 1].start_locationId.lat
     const start_longitude = res.data[res.data.length - 1].start_locationId.lng
-    setStartTrip({
-        startTripName: start_location,
-        startTripLatitude: start_latitude,
-        startTripLongitude: start_longitude
+    const end_location = res.data[res.data.length - 1].end_address.label
+    const end_latitude = res.data[res.data.length - 1].end_locationId.lat
+    const end_longitude = res.data[res.data.length - 1].end_locationId.lng
+    const markers = [
+        {
+            location:start_location,
+            lat: start_latitude,
+            lng:start_longitude,
+            id: uniqid()
+        },
+        {
+            location:end_location,
+            lat:end_latitude,
+            lng:end_longitude,
+            id: uniqid()
+        }
+    ]
+    setTrip({
+       markers:markers
     })
+    setLoading(false)
     })
+    
     .catch(err=>{
         console.log(err.message);
     })
-}
-React.useEffect(()=>{
-    handleStartCoordinate()
-},[])
-const position = [startTrip.startTripLatitude, startTrip.startTripLongitude]
-function ChangeView({ center, zoom }) {
-    const map = useMap();
-    map.setView(center, zoom);
-    return null;
-  }
+      
+},[setTrip])
 
 const [getLabel, setGetLabel] = React.useState(null)
-console.log(startTrip);
 
     return(
-           <MapContainer center={position} zoom={13} scrollWheelZoom={false}> 
-           <ChangeView center={position} zoom={13} />
+        <>
+            {loading && <div><h4>WCZYTUJĘ</h4></div>}
+          { trip.markers && trip.markers.slice(0,1).map(el=>(<MapContainer center={[el.lat, el.lng]} zoom={7} scrollWheelZoom={false}>
             <TileLayer
              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
              />
-            {startTrip && (<Marker position={[startTrip.startTripLatitude, startTrip.startTripLongitude]}
+            {trip.markers
+            ? trip.markers.map(el => (
+            <Marker key={el.id} position={[el.lat, el.lng]}
                  eventHandlers={{
-                    click: (e) => {
-                        setGetLabel(startTrip)
+                    mouseover: (e) => {
+                        setGetLabel(el)
                     },
                     mouseout: (e) => {
                       setTimeout(() => {
@@ -70,15 +77,17 @@ console.log(startTrip);
                     }
                   }}
                   icon={startTripIcon}
-                  />)}
+                  />)): setInterval(() => {
+                     return null
+                  }, 1000)}
              {getLabel && (<Popup 
-                position={[getLabel.startTripLatitude, getLabel.startTripLongitude]}> 
+                position={[getLabel.lat, getLabel.lng]}> 
                 <div>
-                    <h4>{getLabel.startTripName}</h4>
+                    <h4>{getLabel.location}</h4>
                 </div>
                 </Popup>)}
-            </MapContainer> 
-
+            </MapContainer> ))}
+        </>
     )
 }
 

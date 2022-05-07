@@ -17,11 +17,22 @@ const UserTrip = () =>{
             [name]:value
         }))
     }
+     //funkcja onclick sprawdzająca inputy i wysyłająca funkcję do wysłania na serwer
+     const handleSendBtn = () =>{
+        setLoading(true)
+        api()
+        endapi()
+        setError(null)
+        sendTripDataToBackEnd(data.start_address, data.start_locationId, data.end_address, data.end_locationId)
+       }
+        
     
     //obieranie api
     const [data, setData] = React.useState({
         start_address: '',
-        start_locationId: ''
+        start_locationId: '',
+        end_address:'',
+        end_locationId:''
     })
     console.log(data);
     let params = {
@@ -30,47 +41,74 @@ const UserTrip = () =>{
         "q": valueInputs.trip_start,
         "apiKey":'vj6ZeiqEI0oPKSuH26h8Upr-yVU2Vxg3dI18VeicHlw'
          }
-    const api = () =>{
-        setLoading(true)
-    axios.get('https://geocode.search.hereapi.com/v1/geocode',
+    const api = async() =>{
+         await axios.get('https://geocode.search.hereapi.com/v1/geocode',
     {'params': params})
     .then(response =>{
         const address = response.data.items[0].address
         const id = response.data.items[0].position
-        setData({
+      setData(prev=>({
+            ...prev,
             start_address: address,
             start_locationId: id
-        })
+        }))
         setLoading(false)
     })
     .catch(err=>{
         if(err.message === "Network Error"){
             setError("WYSTĄPIŁ PROBLEM Z POŁĄCZENIEM SPRÓBUJ PONOWNIE PÓŹNIEJ...")
-        }else if(!data.address){
-            setError("NIE MA TAKIEGO ADRESU, SPRAWDŹ...");
         }
         setLoading(false)
+    
     })
     }
-
+    let params2 = {
+        "languages":"pl-PL",
+        'maxresults': 1,
+        "q": valueInputs.trip_end,
+        "apiKey":'xVjRPNO79Kf3aUZrm2CLHL4B6Xd8DYfe5bbYdphuPfY'
+    }
+    const endapi = async() =>{
+        await axios
+        .get('https://geocode.search.hereapi.com/v1/geocode',
+        {'params': params2})
+        .then(response=>{
+        const endAddress = response.data.items[0].address
+        const endId = response.data.items[0].position
+        setData(prev=>({
+            ...prev,
+            end_address: endAddress,
+            end_locationId: endId
+        }))
+        setLoading(false)
+        })
+        .catch(err=>{
+            if(err.message === "Network Error"){
+                setError("WYSTĄPIŁ PROBLEM Z POŁĄCZENIEM SPRÓBUJ PONOWNIE PÓŹNIEJ...")
+            }
+            setLoading(false)
+        
+        })
+    }
+    React.useEffect(()=>{
+        api()
+        endapi()
+    },[valueInputs])
+   
     //funkcja przekazująca dane na backend
-const sendTripDataToBackEnd = (start_address, start_locationId) =>{
+const sendTripDataToBackEnd = (start_address, start_locationId, end_address, end_locationId) =>{
     fetch("api/trip_start",{
         method: "POST",
         body: JSON.stringify({
             start_address: start_address,
-            start_locationId: start_locationId
+            start_locationId: start_locationId,
+            end_address: end_address,
+            end_locationId: end_locationId
         }),
         headers: { "Content-type": "application/json" }
     })
 }
-    //funkcja onclick sprawdzająca inputy i wysyłająca funkcję do wysłania na serwer
-    const handleSendBtn = () =>{
-        api()
-        setError(null)
-        sendTripDataToBackEnd(data.start_address, data.start_locationId)
-    }
-
+   
 return(
     <div className="tripAddContainer">
         {loading && <div><h4>SPRAWDZAM...</h4></div>}
@@ -102,7 +140,7 @@ return(
         />
       </div>
         <div className="tripBtnDiv">
-            <button disabled={!valueInputs.trip_start}
+            <button disabled={!valueInputs.trip_start || !valueInputs.trip_end}
             onClick={()=>handleSendBtn()} type="button" className="btn">WYZNACZ</button>
         </div>
     </section>
