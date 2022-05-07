@@ -1,0 +1,81 @@
+.background {
+    top: 0%;
+    z-index: -1;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-image: url("../imgs/mapwallpaper.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .tripAddContainer {
+      margin-top: 5%;
+    font-family: "Roboto", sans-serif;
+  }
+  h2 {
+      color: rgba(103, 23, 159, 1);
+    font-size: 50px;
+    text-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  }
+  .titleContener,
+  .mainContener {
+    text-align: center;
+  }
+  .inpuntDiv{
+      margin: 60px;
+  }
+  label{
+      text-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+      font-size: 30px;
+  }
+  .tripInputs {
+    font-family: "Roboto", sans-serif;
+    font-size: 25px;
+    text-align: center;
+    width: 60%;
+    /* margin: 15px;
+    margin-bottom: 20px; */
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid black;
+    transition: 0.5s ease all;    
+  }
+  .tripInputs:focus {
+    outline: none;
+    border-bottom: 3px solid rgba(103, 23, 159, 1)
+  }
+  .btn {
+    /* margin: 20px; */
+    cursor: pointer;
+    padding: 15px;
+    font-size: 30px;
+    border-radius: 20px;
+    border: solid 5px black;
+    background: transparent;
+    color: black;
+    text-shadow: 4px 0px 19px rgba(255, 215, 0, 1);
+    transition: 0.8s;
+  }
+  .btn:hover {
+      border: solid 5px rgba(103, 23, 159, 1);
+    background:rgba(103, 23, 159, 1);
+    color: #ffd700;
+    box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+      rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
+      rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
+      rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
+      rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+  }
+  .btn:active {
+    box-shadow: rgba(240, 235, 235, 0.795) 0px 5px 20px 10px;
+  }
+  button:hover:disabled{
+    background-color: gray;
+    cursor: not-allowed;
+  }
+  .loading{
+     position: absolute;
+     left: 50%;
+     transform: translate(-50%);
+  }
