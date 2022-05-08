@@ -29,8 +29,6 @@ const UserTrip = (props) =>{
         sendTripDataToBackEnd(data.start_address, data.start_locationId, data.end_address, data.end_locationId)
         if(loading === false || error===false){
             history('/mapsData')
-        }else{
-            console.log("dupa");
         }
        }
         
@@ -42,7 +40,6 @@ const UserTrip = (props) =>{
         end_address:'',
         end_locationId:''
     })
-    console.log(data);
     let params = {
         "languages":"pl-PL",
         'maxresults': 1,
@@ -65,9 +62,10 @@ const UserTrip = (props) =>{
     .catch(err=>{
         if(err.message === "Network Error"){
             setError("WYSTĄPIŁ PROBLEM Z POŁĄCZENIEM SPRÓBUJ PONOWNIE PÓŹNIEJ...")
+        }if(err.response.status === 400){
+            setError("WSZYSTKIE POLA SĄ OBOWIĄZKOWE")
         }
         setLoading(false)
-    
     })
     }
     let params2 = {
@@ -93,9 +91,10 @@ const UserTrip = (props) =>{
         .catch(err=>{
             if(err.message === "Network Error"){
                 setError("WYSTĄPIŁ PROBLEM Z POŁĄCZENIEM SPRÓBUJ PONOWNIE PÓŹNIEJ...")
+            }if(err.response.status === 400){
+                setError("WSZYSTKIE POLA SĄ OBOWIĄZKOWE")
             }
             setLoading(false)
-        
         })
     }
     React.useEffect(()=>{
@@ -123,7 +122,7 @@ return(
          <ReactLoading type={"bars"} color={"tomato"} height={467} width={175} className="loading"/>
      <h4 className="loading" style={{color: "black", fontSize: "25px"}}>SPRAWDZAM</h4>
      </div>}
-        {error && <div><h4>{error}</h4></div>}
+        {error && <div className="errorPanel">{error}</div>}
     <div className="background"></div>
     <section className="titleContener">
         <h2>WYZNACZ SWOJĄ TRASĘ</h2>

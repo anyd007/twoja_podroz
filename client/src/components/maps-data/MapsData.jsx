@@ -1,6 +1,7 @@
 import React from "react";
 import {MapContainer, Marker, Popup, TileLayer, useMap} from "react-leaflet"
-import { Icon, marker } from "leaflet";
+import { Icon } from "leaflet";
+import marker from "../imgs/icons8-map-pin-100.png";
 import axios from "axios";
 import uniqid from "uniqid"
 import ReactLoading from 'react-loading';
@@ -9,17 +10,15 @@ import "./mapsData.css"
 const MapsData = props =>{
 const [loading, setLoading] = React.useState(true)
 const startTripIcon = new Icon({
-    iconUrl: 'http://leafletjs.com/examples/custom-icons/leaf-green.png',
-    shadowUrl: 'http://leafletjs.com/examples/custom-icons/leaf-shadow.png',
-    iconSize:     [38, 95],
-    shadowSize:   [50, 64],
+    iconUrl: marker,
+    iconSize:     [38, 55],
     iconAnchor:   [22, 94],
-    shadowAnchor: [4, 62],
     popupAnchor:  [-3, -76]
 })
 const[trip, setTrip] = React.useState([])
 React.useEffect(()=>{
- axios
+    const getTripApi = async()=>{
+  await axios
     .get("api/trip_start")
     .then(res =>{
     const start_location = res.data[res.data.length - 1].start_address.label
@@ -51,7 +50,8 @@ React.useEffect(()=>{
     .catch(err=>{
         console.log(err.message);
     })
-      
+}    
+getTripApi() 
 },[setTrip])
 
 const [getLabel, setGetLabel] = React.useState(null)
