@@ -93,14 +93,14 @@ const handleCalculate = async() =>{
 React.useEffect(()=>{
     if(dataFromTrip.start==='' || dataFromTrip.finish===''){
         console.log('czekam na dane');
-        setTimeout(() => {
+       const clear =  setTimeout(() => {
             window.location.reload()
         }, 3000);
+        return () => {
+            clearTimeout(clear)
+        }
     }else{
     handleCalculate()
-    }
-    return () => {
-        clearTimeout()
     }
 },[dataFromTrip])
 
