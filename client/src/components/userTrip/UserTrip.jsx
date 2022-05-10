@@ -30,6 +30,10 @@ const UserTrip = (props) =>{
         if(loading === false || error===false){
             history('/mapsData')
         }
+        setValueInpunts(prev=>({
+            trip_start: '',
+            trip_end: ''
+        }))
        }
         
     
@@ -40,6 +44,7 @@ const UserTrip = (props) =>{
         end_address:'',
         end_locationId:''
     })
+   
     let params = {
         "languages":"pl-PL",
         'maxresults': 1,
@@ -47,26 +52,32 @@ const UserTrip = (props) =>{
         "apiKey":'vj6ZeiqEI0oPKSuH26h8Upr-yVU2Vxg3dI18VeicHlw'
          }
     const api = async() =>{
-         await axios.get('https://geocode.search.hereapi.com/v1/geocode',
-    {'params': params})
-    .then(response =>{
+        try{
+         await axios
+         .get('https://geocode.search.hereapi.com/v1/geocode',
+        {'params': params})
+         .then(response =>{
         const address = response.data.items[0].address
         const id = response.data.items[0].position
-      setData(prev=>({
+         setData(prev=>({
             ...prev,
             start_address: address,
             start_locationId: id
         }))
         setLoading(false)
     })
-    .catch(err=>{
+}
+    catch(err){
         if(err.message === "Network Error"){
-            setError("WYSTĄPIŁ PROBLEM Z POŁĄCZENIEM SPRÓBUJ PONOWNIE PÓŹNIEJ...")
-        }if(err.response.status === 400){
-            setError("WSZYSTKIE POLA SĄ OBOWIĄZKOWE")
-        }
+            setError("WYSTĄPIŁ PROBLEM Z POŁĄCZENIEM SPRÓBUJ PONOWNIE PÓŹNIEJ...") }
+        if(error.response){
+            console.log(error.response);
+        }else if(error.request){
+            console.log(error.request);
+        }else if(error.message){
+            console.log(error.message);}
         setLoading(false)
-    })
+    }
     }
     let params2 = {
         "languages":"pl-PL",
@@ -75,6 +86,7 @@ const UserTrip = (props) =>{
         "apiKey":'xVjRPNO79Kf3aUZrm2CLHL4B6Xd8DYfe5bbYdphuPfY'
     }
     const endapi = async() =>{
+        try{
         await axios
         .get('https://geocode.search.hereapi.com/v1/geocode',
         {'params': params2})
@@ -88,18 +100,29 @@ const UserTrip = (props) =>{
         }))
         setLoading(false)
         })
-        .catch(err=>{
-            if(err.message === "Network Error"){
+         }
+        catch(error){
+            if(error.message === "Network Error"){
                 setError("WYSTĄPIŁ PROBLEM Z POŁĄCZENIEM SPRÓBUJ PONOWNIE PÓŹNIEJ...")
-            }if(err.response.status === 400){
-                setError("WSZYSTKIE POLA SĄ OBOWIĄZKOWE")
+                console.log(error.message);
             }
+            if(error.response){
+                 console.log(error.message);
+             }else if(error.request){
+                 console.log(error.message);
+             }else if(error.message){
+                 console.log(error.message);}
             setLoading(false)
-        })
+        }
     }
     React.useEffect(()=>{
+    if(valueInputs.trip_start === '' || valueInputs.trip_end === ''){
+        setError("WSZYSKIE POLA SĄ OBOWIĄZKOWE")
+    }else{
         api()
         endapi()
+        setError(false)
+    }
     },[valueInputs])
    
     //funkcja przekazująca dane na backend
