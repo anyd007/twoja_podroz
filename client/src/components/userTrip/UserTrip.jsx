@@ -64,8 +64,8 @@ const UserTrip = (props) =>{
             start_address: address,
             start_locationId: id
         }))
-        setLoading(false)
     })
+    setLoading(false)
 }
     catch(err){
         if(err.message === "Network Error"){
