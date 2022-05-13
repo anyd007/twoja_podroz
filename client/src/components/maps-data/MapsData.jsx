@@ -28,7 +28,8 @@ export default function MapsData({setSelectedMode}){
 
   const [trip, setTrip] = React.useState([]); //pobieranie danych z serwera
   React.useEffect(() => {
-    axios
+    const getAPI = async() =>{
+  await  axios
       .get("api/trip_start")
       .then((res) => {
         const start_location =
@@ -63,85 +64,23 @@ export default function MapsData({setSelectedMode}){
       .catch((err) => {
         console.log(err.message);
       });
+    }
+    getAPI()
   }, []);
 
-  //pobieranie API do kalkulacji drogi z komponentu UserTrip
-  const [dataFromTrip, setDataFromTrip] = React.useState({
-    start: "",
-    finish: "",
-  });
-
   React.useEffect(() => {
-    const handleDataTrip = () => {
-      try {
-        if (trip.markers !== undefined) {
-          setDataFromTrip({
-            start: [trip.markers[0].lat, trip.markers[0].lng],
-            finish: [trip.markers[1].lat, trip.markers[1].lng],
-          });
-        }
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
-    handleDataTrip();
-  }, [trip.markers]);
-
-  //pobieranie danych z HERE ROUTE API
-  const [calculate, setCalculate] = React.useState({
-     tripHelper:'',
-    herePolyline:'',
-    summary:'',
-    transport:'',
-    startTripTime:'',
-    finishTripTime:''
-  })
-  console.log(calculate);
-  let origin = (dataFromTrip.start).toString();
-  let destination = (dataFromTrip.finish).toString();
-  let params = {
-    // "languages":"pl-PL",
-    transportMode: "car",
-    origin: origin,
-    destination: destination,
-    return: "summary,polyline,actions,instructions",
-    apikey: "S8EEbwPOg895VRAWM5B0dySTjVDHQgOb60_miRqD5ik",
-  };
-  const handleCalculate = async () => {
-    await axios
-      .get("https://router.hereapi.com/v8/routes", { params: params })
-      .then((res) => res.data)
-      .then((data) => {
-        const tripHelper = data.routes[0].sections[0].actions;
-        const herePolyline = data.routes[0].sections[0].polyline;
-        const summary = data.routes[0].sections[0].summary;
-        const transport = data.routes[0].sections[0].transport;
-        const startTripTime = data.routes[0].sections[0].departure;
-        const finishTripTime = data.routes[0].sections[0].arrival;
-
-      setCalculate({
-        tripHelper:tripHelper,
-        herePolyline:herePolyline,
-        summary:summary,
-        transport:transport,
-        startTripTime:startTripTime,
-        finishTripTime:finishTripTime
-      })})
-  };
-  React.useEffect(() => {
-    if (dataFromTrip.start === "" || dataFromTrip.finish === "") {
+    if (trip.length === 0) {
       console.log("czekam na dane");
       const clear = setTimeout(() => {
-        window.location.reload();
+       window.location.reload()
       }, 3000);
       return () => {
         clearTimeout(clear);
       };
     } else {
-      handleCalculate();
       setSelectedMode(trip)
     }
-  }, [dataFromTrip]);
+  }, [trip]);
 
   const [getLabel, setGetLabel] = React.useState(null);
 
